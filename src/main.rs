@@ -1,5 +1,6 @@
 mod api;
 mod model;
+mod constants;
 
 use actix_web::{ HttpServer, App, web::Data, middleware::Logger };
 

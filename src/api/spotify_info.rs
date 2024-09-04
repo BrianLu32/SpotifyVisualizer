@@ -1,13 +1,12 @@
 use serde:: {Deserialize, Serialize };
-use reqwest::{header::{ ACCEPT, AUTHORIZATION, CONTENT_TYPE }, Error};
-use serde_json::json;
+use reqwest::header::{ ACCEPT, CONTENT_TYPE };
 use strum::Display;
-use uuid::Uuid;
 use actix_web::{
-  dev::Response, error::ResponseError, get, http::{header::ContentType, StatusCode}, post, put, web::{Data, Json, Path}, HttpResponse
+  get, http::{header::ContentType, StatusCode}, web::{Json, Path}, HttpResponse
 };
 
 use crate::model::spotify_info::SpotifyInfo;
+use crate::constants::token::TOKEN;
 
 // pub type SpotifyInfos = Response<SpotifyInfo>;
 
@@ -48,35 +47,35 @@ pub struct SpotifyInfoRequest {
 
 }
 
-#[derive(Debug, Display)]
-pub enum SpotifyError {
-  NotFound,
-  BadRequest,
-  Unauthorized
-}
+// #[derive(Debug, Display)]
+// pub enum SpotifyError {
+//   NotFound,
+//   BadRequest,
+//   Unauthorized
+// }
 
-impl ResponseError for SpotifyError {
-  fn error_response(&self) -> HttpResponse {
-    HttpResponse::build(self.status_code())
-      .insert_header(ContentType::json())
-      .body(self.to_string())
-  }
+// impl ResponseError for SpotifyError {
+//   fn error_response(&self) -> HttpResponse {
+//     HttpResponse::build(self.status_code())
+//       .insert_header(ContentType::json())
+//       .body(self.to_string())
+//   }
 
-  fn status_code(&self) -> StatusCode {
-  match self {
-      SpotifyError::NotFound => StatusCode::NOT_FOUND,
-      SpotifyError::BadRequest => StatusCode::BAD_REQUEST,
-      SpotifyError::Unauthorized => StatusCode::UNAUTHORIZED
-    }
-  }
-}
+//   fn status_code(&self) -> StatusCode {
+//   match self {
+//       SpotifyError::NotFound => StatusCode::NOT_FOUND,
+//       SpotifyError::BadRequest => StatusCode::BAD_REQUEST,
+//       SpotifyError::Unauthorized => StatusCode::UNAUTHORIZED
+//     }
+//   }
+// }
 
 #[get("/getSpotifyInfo")]
-pub async fn get_spotify_info(spotify_info_identifier: Path<SpotifyInfoIdentifier>) -> Json<String> {
+pub async fn get_spotify_info() -> Json<String> {
   let client = reqwest::Client::new();
 
   let response = client.get("https://api.spotify.com/v1/artists/4Z8W4fKeB5YxbusRsdQVPb")
-  .header(AUTHORIZATION, "Bearer [TOKEN]")
+  .bearer_auth(TOKEN)
   .header(CONTENT_TYPE, "application/json")
   .header(ACCEPT, "application/json")
   .send()
