@@ -7,6 +7,8 @@ export default function Searchbar() {
   const [query, setQuery] = useState("")
   const [searchResult, setSearchResult] = useState({});
 
+  let artistImageUrl = '';
+
   function HandleSearchResult(searchResult) {
     
   } 
@@ -14,22 +16,10 @@ export default function Searchbar() {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if(!query) return;
-      
-      const url = `https://api.spotify.com/v1/search?q=${query}&type=artist`;
 
-      const requestOptions = {
-        method: 'GET',
-        headers: 
-        { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${key}`
-        },
-      };
-
-      fetch(url, requestOptions)
-        .then(response => response.json())
-        .then(json => setSearchResult(json))
-        .catch(error => console.error(error));
+      SearchSpotifyByAlbumAndTrack(query).then(response => {
+        setSearchResult(response)
+      });
     }, 500);
     return () => clearTimeout(timeoutId);
   }, [query]);

@@ -25,10 +25,8 @@ import { key } from '../constants/key.js'
 // 	}
 // }
 
-const SearchSpotifyByAlbumAndTrack = (query) => {
-	const [searchResults, setSearchResults] = useState({});
-
-	const url = `https://api.spotify.com/v1/search?q=${query}type=album%2Cartist`;
+const SearchSpotifyByAlbumAndTrack = async (query) => {
+	const url = `https://api.spotify.com/v1/search?q=${query}&type=artist`;
 	const requestOptions = {
 		method: 'GET',
 		headers: 
@@ -38,12 +36,13 @@ const SearchSpotifyByAlbumAndTrack = (query) => {
 		},
 	};
 
-	fetch(url, requestOptions)
-		.then(response => response.json())
-		.then(json => setSearchResults(json))
-		.catch(error => console.error(error));
-
-	return searchResults;
+	try {
+		const response = await fetch(url, requestOptions);
+		const json = await response.json();
+		return json;
+	} catch (error) {
+		return console.error(error);
+	}
 }
 
 // export default SpotifyService;
