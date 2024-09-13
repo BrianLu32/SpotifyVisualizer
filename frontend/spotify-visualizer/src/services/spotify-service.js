@@ -1,6 +1,6 @@
 import '../constants/key.js'
 import { key } from '../constants/key.js'
-import SpotifyInfo from '../model/SpotifyInfo.js';
+import SpotifyInfo from '../model/spotify-info.js';
 
 const SpotifyService = {
 	SearchSpotifyByAlbumAndTrack: async function(query) {
@@ -19,7 +19,7 @@ const SpotifyService = {
 			const json = await response.json();
 			let props = {
 				'artistName': json.artists.items[0].name,
-				'artistImageUrl': json.artists.items[0].images[0].url,
+				'artistImageUrl': json.artists.items[0].images[1].url,
 				'numFollowers': json.artists.items[0].followers.total,
 				'genreList': json.artists.items[0].genres
 			}

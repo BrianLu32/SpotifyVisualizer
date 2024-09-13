@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
-import SpotifyService from "../services/spotify-service";
+import SpotifyService from "../../services/spotify-service";
 
-export default function Searchbar() {
+export default function Searchbar({setSpotifyInfo}) {
   const [query, setQuery] = useState("")
-  const [searchResult, setSearchResult] = useState({});
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       if(!query) return;
 
       SpotifyService.SearchSpotifyByAlbumAndTrack(query).then(response => {
-        setSearchResult(response)
+        setSpotifyInfo(response)
       });
     }, 500);
     return () => clearTimeout(timeoutId);
@@ -19,9 +18,6 @@ export default function Searchbar() {
   return(
     <div className='searchbar'>
       <input className="searchbar-input" type="text" placeholder="Search" onChange={event => setQuery(event.target.value)}></input>
-      <p>
-        { JSON.stringify(searchResult) }
-      </p>
     </div>
   );
 }
